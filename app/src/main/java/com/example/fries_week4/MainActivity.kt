@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var myList: ListView
+
     private lateinit var mapButton: Button
     private lateinit var headlinesButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
