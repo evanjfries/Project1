@@ -24,7 +24,6 @@ class ArticlesManager<PackageManager> {
     fun retrieveArticles(searchTerm: String?, source: String?, apiKey:String, topHeadlines: Boolean): List<Article>{
         val date = Date()
         val formatter = SimpleDateFormat("yyyy-MM-dd",  Locale.getDefault())
-        val dateAsString = formatter.format(date)
         var url = "https://newsapi.org/v2/"
         url += if(topHeadlines){"top-headlines?country=us"}else{"everything?"}
         if(!searchTerm.isNullOrEmpty())url+= ("q=$searchTerm")
@@ -33,14 +32,12 @@ class ArticlesManager<PackageManager> {
         url += "&apiKey=$apiKey&language=en"
         val request = Request.Builder()
             .url(url)
-//            .url("https://newsapi.org/v2/everything?q=$searchTerm&from=$dateAsString&sortBy=publishedAt&apiKey=$apiKey&language=en")
             .header(
                 "Authorization",
                 "Bearer $apiKey"
             )
             .get()
             .build()
-
         val response = okHttpClient.newCall(request).execute()
         val responseBody:String?=response.body?.string()
         if(response.isSuccessful && !responseBody.isNullOrEmpty()){

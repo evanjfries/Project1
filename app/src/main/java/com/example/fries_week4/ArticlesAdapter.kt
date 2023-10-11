@@ -17,10 +17,6 @@ import com.bumptech.glide.Glide
 class ArticlesAdapter (val articles: List<Article>): RecyclerView.Adapter<ArticlesAdapter.ViewHolder>() {
     private lateinit var context : Context
     class ViewHolder(rootLayout: View): RecyclerView.ViewHolder(rootLayout){
-//        val articleNameText : TextView = rootLayout.findViewById(R.id.restaurant_name)
-//        val categoryText : TextView = rootLayout.findViewById(R.id.Category)
-//        val rating: TextView = rootLayout.findViewById(R.id.rating)
-//        val icon: ImageView = rootLayout.findViewById(R.id.icon)
         var title : TextView = rootLayout.findViewById(R.id.sourceTitleText)
         var description : TextView = rootLayout.findViewById(R.id.sourceDescriptionText)
         var source : TextView = rootLayout.findViewById(R.id.sourceText)
@@ -47,6 +43,7 @@ class ArticlesAdapter (val articles: List<Article>): RecyclerView.Adapter<Articl
         holder.title.text = currentArticle.title
         holder.source.text=currentArticle.source
         holder.description.text=currentArticle.description
+
         Glide.with(context)
             .load(currentArticle.urlToImage) // URL of the image
             .into(holder.icon) // ImageView to display the image
