@@ -1,9 +1,12 @@
 package com.example.fries_week4
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +23,7 @@ class SourcesActivity : AppCompatActivity() {
     private lateinit var searchTermText: TextView
     private lateinit var categorySpinner: Spinner
     private lateinit var recyclerView: RecyclerView
+    private lateinit var skipButton : Button
 
 //    private lateinit var newsApiClient: NewsApiClient
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +35,7 @@ class SourcesActivity : AppCompatActivity() {
         //Get Search Term
         searchTermText = findViewById(R.id.searchTermText)
         categorySpinner = findViewById(R.id.categorySpinner)
+        skipButton = findViewById(R.id.skipSourcesButton)
         val searchTerm = intent.getStringExtra("searchTerm")
         if (searchTerm != null) {
             searchTermText.text = "Search for: '$searchTerm'"
@@ -82,7 +87,11 @@ class SourcesActivity : AppCompatActivity() {
             }
         }
 
-
+        skipButton.setOnClickListener(View.OnClickListener {
+            val newIntent = Intent(this, ArticlesActivity::class.java)
+            newIntent.putExtra("searchTerm", searchTerm)
+            startActivity(newIntent)
+        })
 
     }
 }
