@@ -11,18 +11,36 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".MapsActivity" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/articlesRecyclerView"
+        android:layout_width="392dp"
+        android:layout_height="205dp"
+        android:layout_marginTop="6dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button3"
+        app:layout_constraintVertical_bias="1.0"
+        tools:listitem="@layout/articlescardviewlayout" />
+
     <Button
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="472dp"
-        android:text="Button"
+        android:backgroundTint="@color/red"
+        android:text="LONG CLICK ON MAP"
+        android:visibility="invisible"
+        app:icon="@drawable/cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/map" />

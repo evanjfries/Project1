@@ -10,16 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 
 class YelpAdapter (val yelps: List<YelpBusiness>): RecyclerView.Adapter<YelpAdapter.ViewHolder>() {
     class ViewHolder(rootLayout: View): RecyclerView.ViewHolder(rootLayout){
-        val restaurantNameText : TextView = rootLayout.findViewById(R.id.restaurant_name)
-        val categoryText : TextView = rootLayout.findViewById(R.id.Category)
-        val rating: TextView = rootLayout.findViewById(R.id.rating)
+        val restaurantNameText : TextView = rootLayout.findViewById(R.id.sourceTitleText)
+        val categoryText : TextView = rootLayout.findViewById(R.id.sourceText)
+        val rating: TextView = rootLayout.findViewById(R.id.sourceDescriptionText)
         val icon: ImageView = rootLayout.findViewById(R.id.icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         Log.d("RV", "inside onCreateViewHolder")
         val layoutInflater: LayoutInflater= LayoutInflater.from(parent.context)
-        val rootLayout: View = layoutInflater.inflate(R.layout.cardviewlayout, parent, false)
+        val rootLayout: View = layoutInflater.inflate(R.layout.articlescardviewlayout, parent, false)
         val viewHolder=ViewHolder(rootLayout)
         return viewHolder
     }

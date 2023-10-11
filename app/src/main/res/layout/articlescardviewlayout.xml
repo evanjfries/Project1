@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    app:cardMaxElevation="10dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    android:onClick="openLinkInBrowser">
+
+    <!-- In the above cardview widget cardelevation property will give elevation to your card view
+        card corner radius will provide radius to your card view card background color will give
+        background color to your card view card max elevation will give the cardview maximum
+        elevation card prevent corner overlap will add padding to CardView on v20 and before to
+        prevent intersections between the Card content and rounded corners. Card use compact padding
+        will add padding in API v21+ as well to have the same measurements with previous versions -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_view_layout"
+        android:layout_width="352dp"
+        android:layout_height="168dp"
+        android:layout_margin="8dp">
+
+        <!-- ImageVIew to display our Course Image -->
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher_round"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/sourceTitleText"
+            android:layout_width="240dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="8dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Article Title" />
+
+        <TextView
+            android:id="@+id/sourceText"
+            android:layout_width="185dp"
+            android:layout_height="23dp"
+            android:layout_marginTop="4dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/sourceTitleText"
+            app:layout_constraintTop_toBottomOf="@id/sourceTitleText"
+            tools:text="Source" />
+
+        <TextView
+            android:id="@+id/sourceDescriptionText"
+            android:layout_width="323dp"
+            android:layout_height="85dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="28dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icon"
+            tools:text="Description" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

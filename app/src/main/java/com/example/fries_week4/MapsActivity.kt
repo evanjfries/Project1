@@ -2,10 +2,15 @@ package com.example.fries_week4
 
 import android.location.Address
 import android.location.Geocoder
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -15,13 +20,24 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.fries_week4.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.MapsInitializer
+import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.util.Locale
+
+//import okhttp3.OkHttpClient
+//import okhttp3.Request
+//import okhttp3.Response
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private lateinit var myButton: Button
+    private lateinit var myButton: MaterialButton
+    private lateinit var recyclerView : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,23 +73,41 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
          //   mMap.clear()
 
             val geocoder = Geocoder(this, Locale.getDefault())
-            val results = try{
-                geocoder.getFromLocation(it.latitude, it.longitude, 10)
-            }catch(exception: Exception){
+            val results = try {
+                geocoder.getFromLocation(it.latitude, it.longitude, 1) // Limit results to 1 to get only the best result
+            } catch (exception: Exception) {
                 Log.e("Maps", "Geocoding failed", exception)
                 listOf<Address>()
             }
 
-            if(results.isNullOrEmpty()){
+            if (results.isNullOrEmpty()) {
                 Log.e("Maps", "No addresses found")
-            }else{
+            } else {
                 val currentAddress = results[0]
-                val addressLine = currentAddress.getAddressLine(0)
+                val country = currentAddress.countryName
 
-                mMap.addMarker(MarkerOptions().position(it).title(addressLine))
+                mMap.addMarker(MarkerOptions().position(it).title(country))
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(it))
 
-                myButton.text=addressLine
+                myButton.visibility = View.VISIBLE
+                myButton.text = "Results for $country"
+                myButton.icon = ContextCompat.getDrawable(this, R.drawable.check)
+                myButton.setBackgroundColor(getColor(R.color.green))
+
+                recyclerView = findViewById(R.id.articlesRecyclerView)
+                val articlesManager = ArticlesManager<Any>()
+                val apiKey= getString(R.string.news_api_key)
+                var articles = listOf<Article>()
+
+                CoroutineScope(Dispatchers.IO).launch{
+                    articles = articlesManager.retrieveArticles("$country&searchIn=title", "", apiKey, false)
+
+                    withContext(Dispatchers.Main){
+                        val adapter = ArticlesAdapter(articles)
+                        recyclerView.adapter = adapter
+                        recyclerView.layoutManager = LinearLayoutManager(this@MapsActivity, LinearLayoutManager.HORIZONTAL, false)
+                    }
+                }
             }
         }
 
@@ -83,4 +117,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.addMarker(MarkerOptions().position(latLng).title(title))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
     }
+
+    // CLASS STUFF
+//    val okHttpClient = OkHttpClient()
+//    val response=okHttpClient.newCall(request).execute()
+//    val responseBody:String?=response.body?.string()
+//    if(response.isSuccessful && !responseBody.isNullOrEmpty()){
+//        val yelpList = mutableListOf<YelpBusiness>()
+//        val json = JSONObject(responseBody)
+//        val businesses = json.getJSONArray("businesses")
+//        for(i in 0 < until < businesses.length()){
+//            val currentBusiness=businesses.getJSONObject(i)
+//            val name=currentBusiness.getString("name")
+//            val rating=currentBusiness.getDouble("rating")
+//            val icon=currentBusiness.getString("image_url")
+//            val categories=currentBusiness.getJSONArray("categories")
+//            val currentCategory=categories.getJSONObject(0)
+//            val title=currentCategory.getString("title")
+//            val yelp = YelpBusiness(
+//            )
+//        }
+//    }
+
 }
