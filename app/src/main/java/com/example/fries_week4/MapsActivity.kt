@@ -43,7 +43,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var myButton: MaterialButton
     private lateinit var recyclerView : RecyclerView
     private lateinit var sharedPrefs: SharedPreferences
-    private lateinit var marker: Marker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +58,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
     }
 
     /**
@@ -93,7 +93,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val country = currentAddress.countryName
                 val it = LatLng(lastLat.toDouble(), lastLong.toDouble())
 
-                marker = mMap.addMarker(MarkerOptions().position(it).title(country))!!
+                mMap.addMarker(MarkerOptions().position(it).title(country))!!
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 2f))
 
                 myButton.visibility = View.VISIBLE
@@ -138,11 +138,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 sharedPrefs.edit().putFloat("lastLat", (it.latitude).toFloat()).apply()
                 sharedPrefs.edit().putFloat("lastLong", (it.longitude).toFloat()).apply()
 
-                if(marker != null){
-                    marker.remove()
-                }
-                marker = mMap.addMarker(MarkerOptions().position(it).title(country))!!
+                mMap.addMarker(MarkerOptions().position(it).title(country))!!
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 5f))
+
 
                 myButton.visibility = View.VISIBLE
                 myButton.text = "Results for $country"
