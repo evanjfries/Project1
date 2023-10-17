@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -38,12 +39,15 @@ class ArticlesActivity : AppCompatActivity() {
         if(!intent.getStringExtra("searchTerm").isNullOrEmpty()) topHeadlines = false
 
         CoroutineScope(IO).launch{
-            articles = articlesManager.retrieveArticles(intent.getStringExtra("searchTerm"), intent.getStringExtra("source"), apiKey, topHeadlines)
-
-            withContext(Main){
-                val adapter = ArticlesAdapter(articles)
-                recyclerView.adapter = adapter
-                recyclerView.layoutManager =LinearLayoutManager(this@ArticlesActivity)
+            articles = articlesManager.retrieveArticles(intent.getStringExtra("searchTerm"), intent.getStringExtra("source"), "", apiKey, topHeadlines)
+            if(articles.isNullOrEmpty()){
+                runOnUiThread{Toast.makeText(this@ArticlesActivity, "No articles found with these parameters", Toast.LENGTH_SHORT).show()}
+            }else{
+                withContext(Main){
+                    val adapter = ArticlesAdapter(articles)
+                    recyclerView.adapter = adapter
+                    recyclerView.layoutManager =LinearLayoutManager(this@ArticlesActivity)
+                }
             }
         }
     }

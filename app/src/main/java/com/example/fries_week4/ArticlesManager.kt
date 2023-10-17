@@ -3,6 +3,8 @@ import android.content.pm.PackageManager
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
+import kotlinx.coroutines.NonDisposableHandle.parent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
@@ -21,12 +23,13 @@ class ArticlesManager<PackageManager> {
         okHttpClient = builder.build()
     }
 
-    fun retrieveArticles(searchTerm: String?, source: String?, apiKey:String, topHeadlines: Boolean): List<Article>{
+    fun retrieveArticles(searchTerm: String?, source: String?, category: String?, apiKey:String, topHeadlines: Boolean): List<Article>{
         val date = Date()
         val formatter = SimpleDateFormat("yyyy-MM-dd",  Locale.getDefault())
         var url = "https://newsapi.org/v2/"
         url += if(topHeadlines){"top-headlines?country=us"}else{"everything?"}
         if(!searchTerm.isNullOrEmpty())url+= ("q=$searchTerm")
+        if(!category.isNullOrEmpty())url+= ("&category=$category")
         if(!source.isNullOrEmpty())url+= ("&sources=$source")
 //        if(searchTerm.isNullOrEmpty() && source.isNullOrEmpty())url+="&"
         url += "&apiKey=$apiKey&language=en"
@@ -40,7 +43,9 @@ class ArticlesManager<PackageManager> {
             .build()
         val response = okHttpClient.newCall(request).execute()
         val responseBody:String?=response.body?.string()
+
         if(response.isSuccessful && !responseBody.isNullOrEmpty()){
+            Log.d("Response: ", responseBody)
             val articleList = mutableListOf<Article>()
             val json = JSONObject(responseBody)
             val articles = json.getJSONArray("articles")

@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         headlinesButton.setOnClickListener(View.OnClickListener { // Create an Intent to switch to the target activity
-            val intent = Intent(this@MainActivity, ArticlesActivity::class.java)
+            val intent = Intent(this@MainActivity, TopHeadlinesActivity::class.java)
             startActivity(intent)
         })
 

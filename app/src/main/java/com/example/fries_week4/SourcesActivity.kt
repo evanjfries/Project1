@@ -1,6 +1,7 @@
 package com.example.fries_week4
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -46,6 +47,7 @@ class SourcesActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         categorySpinner.adapter = adapter
+
 
         // Set up a listener for the selected category
         categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

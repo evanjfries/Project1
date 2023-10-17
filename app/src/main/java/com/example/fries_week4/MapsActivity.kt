@@ -1,5 +1,7 @@
 package com.example.fries_week4
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.location.Address
 import android.location.Geocoder
 import android.opengl.Visibility
@@ -8,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.fries_week4.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.model.Marker
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +42,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var myButton: MaterialButton
     private lateinit var recyclerView : RecyclerView
+    private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var marker: Marker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +72,50 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        Log.d("Map: ", "Map ready")
+
+        sharedPrefs  = getSharedPreferences("savedStuff", MODE_PRIVATE)
+        val lastLat = sharedPrefs.getFloat("lastLat", 0.0f)
+        val lastLong = sharedPrefs.getFloat("lastLong", 0.0f)
+        if (lastLong != 0.0f && lastLat != 0.0f) {
+            val geocoder = Geocoder(this, Locale.getDefault())
+            val results = try {
+                geocoder.getFromLocation(lastLat.toDouble(), lastLong.toDouble(), 1) // Limit results to 1 to get only the best result
+            } catch (exception: Exception) {
+                Log.e("Maps", "Geocoding failed", exception)
+                listOf<Address>()
+            }
+
+            if (results.isNullOrEmpty()) {
+                Log.e("Maps", "No addresses found")
+            } else {
+                val currentAddress = results[0]
+                val country = currentAddress.countryName
+                val it = LatLng(lastLat.toDouble(), lastLong.toDouble())
+
+                marker = mMap.addMarker(MarkerOptions().position(it).title(country))!!
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 2f))
+
+                myButton.visibility = View.VISIBLE
+                myButton.text = "Results for $country"
+                myButton.icon = ContextCompat.getDrawable(this, R.drawable.check)
+                myButton.setBackgroundColor(getColor(R.color.green))
+
+                recyclerView = findViewById(R.id.articlesRecyclerView)
+                val articlesManager = ArticlesManager<Any>()
+                val apiKey= getString(R.string.news_api_key)
+                var articles = listOf<Article>()
+
+                CoroutineScope(Dispatchers.IO).launch{
+                    articles = articlesManager.retrieveArticles("$country&searchIn=title", "", "", apiKey, false)
+                    withContext(Dispatchers.Main){
+                        val adapter = ArticlesAdapter(articles)
+                        recyclerView.adapter = adapter
+                        recyclerView.layoutManager = LinearLayoutManager(this@MapsActivity, LinearLayoutManager.HORIZONTAL, false)
+                    }
+                }
+            }
+        }
 
         mMap.setOnMapLongClickListener {
             Log.d("Maps", "Long click at ${it.latitude}, ${it.longitude}")
@@ -85,9 +135,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 val currentAddress = results[0]
                 val country = currentAddress.countryName
+                sharedPrefs.edit().putFloat("lastLat", (it.latitude).toFloat()).apply()
+                sharedPrefs.edit().putFloat("lastLong", (it.longitude).toFloat()).apply()
 
-                mMap.addMarker(MarkerOptions().position(it).title(country))
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(it))
+                if(marker != null){
+                    marker.remove()
+                }
+                marker = mMap.addMarker(MarkerOptions().position(it).title(country))!!
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 5f))
 
                 myButton.visibility = View.VISIBLE
                 myButton.text = "Results for $country"
@@ -100,7 +155,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 var articles = listOf<Article>()
 
                 CoroutineScope(Dispatchers.IO).launch{
-                    articles = articlesManager.retrieveArticles("$country&searchIn=title", "", apiKey, false)
+                    articles = articlesManager.retrieveArticles("$country&searchIn=title", "", "", apiKey, false)
 
                     withContext(Dispatchers.Main){
                         val adapter = ArticlesAdapter(articles)
@@ -112,10 +167,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // Add a marker in Sydney and move the camera
-        val latLng = LatLng(38.898365, -77.046753)
-        val title = "GWU"
-        mMap.addMarker(MarkerOptions().position(latLng).title(title))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+//        val latLng = LatLng(38.898365, -77.046753)
+//        val title = "GWU"
+//        mMap.addMarker(MarkerOptions().position(latLng).title(title))
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
     }
 
     // CLASS STUFF

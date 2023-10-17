@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.paging:paging-runtime:3.2.1")
     implementation ("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation("androidx.core:core-ktx:1.9.0")
