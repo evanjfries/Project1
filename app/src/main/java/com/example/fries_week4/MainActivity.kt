@@ -9,7 +9,9 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,9 +20,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchButton: Button
     private lateinit var editText: EditText
     private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var toolbar: Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Home Page"
+
 
         // Obtain Views
         mapButton = findViewById(R.id.mapButton)

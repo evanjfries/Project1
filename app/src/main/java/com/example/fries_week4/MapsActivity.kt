@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Locale
+import androidx.appcompat.widget.Toolbar
 
 //import okhttp3.OkHttpClient
 //import okhttp3.Request
@@ -43,12 +44,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var myButton: MaterialButton
     private lateinit var recyclerView : RecyclerView
     private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        toolbar = findViewById(R.id.toolbar2)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Maps"
 
         myButton = findViewById(R.id.button3)
 
@@ -98,6 +104,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 myButton.visibility = View.VISIBLE
                 myButton.text = "Results for $country"
+                supportActionBar?.title = "Results for $country"
                 myButton.icon = ContextCompat.getDrawable(this, R.drawable.check)
                 myButton.setBackgroundColor(getColor(R.color.green))
 
@@ -144,6 +151,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 myButton.visibility = View.VISIBLE
                 myButton.text = "Results for $country"
+                supportActionBar?.title = "Results for $country"
                 myButton.icon = ContextCompat.getDrawable(this, R.drawable.check)
                 myButton.setBackgroundColor(getColor(R.color.green))
 

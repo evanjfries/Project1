@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -21,16 +22,24 @@ class ArticlesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var topHeadlines : Boolean = true
     private lateinit var pageTitle : TextView
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_articles)
 
-        pageTitle = findViewById(R.id.searchDescriptionText)
+        toolbar = findViewById(R.id.toolbar5)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Home Page"
+
         var searchTerm = intent.getStringExtra("searchTerm")
         var sourceName = intent.getStringExtra("sourceName")
-        if(!searchTerm.isNullOrEmpty()&& sourceName.isNullOrEmpty()) pageTitle.text = "Search for: '$searchTerm'"
-        if(!searchTerm.isNullOrEmpty()&& !sourceName.isNullOrEmpty()) pageTitle.text = "Search for: '$searchTerm' from $sourceName"
+        if(!searchTerm.isNullOrEmpty()&& sourceName.isNullOrEmpty()){
+            supportActionBar?.title = "Search for: '$searchTerm'"
+        }
+        if(!searchTerm.isNullOrEmpty()&& !sourceName.isNullOrEmpty()){
+            supportActionBar?.title = "Search for: '$searchTerm' from $sourceName"
+        }
 
         recyclerView = findViewById(R.id.articlesRecyclerView)
         val articlesManager = ArticlesManager<Any>()

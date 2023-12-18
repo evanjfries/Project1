@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -25,21 +26,26 @@ class SourcesActivity : AppCompatActivity() {
     private lateinit var categorySpinner: Spinner
     private lateinit var recyclerView: RecyclerView
     private lateinit var skipButton : Button
+    private lateinit var toolbar: Toolbar
 
-//    private lateinit var newsApiClient: NewsApiClient
+
+    //    private lateinit var newsApiClient: NewsApiClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sources)
 
+        toolbar = findViewById(R.id.toolbar3)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Search for: "
+
         val client = OkHttpClient()
 
         //Get Search Term
-        searchTermText = findViewById(R.id.searchTermText)
         categorySpinner = findViewById(R.id.categorySpinner)
         skipButton = findViewById(R.id.skipSourcesButton)
         val searchTerm = intent.getStringExtra("searchTerm")
         if (searchTerm != null) {
-            searchTermText.text = "Search for: '$searchTerm'"
+            supportActionBar?.title = "Search for: '$searchTerm'"
         }
 
         // Populate the Spinner with categories
