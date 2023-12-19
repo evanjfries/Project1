@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
@@ -58,5 +59,15 @@ class ArticlesAdapter (val articles: List<Article>): RecyclerView.Adapter<Articl
     private fun openUrlInBrowser(url: String) {
         val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(webIntent)
+    }
+}
+
+object ArticleDiffCallback : DiffUtil.ItemCallback<Article>() {
+    override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+        return oldItem.url == newItem.url
+    }
+
+    override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+        return oldItem == newItem
     }
 }
